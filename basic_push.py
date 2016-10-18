@@ -10,7 +10,8 @@ adcValues = [0 for i in range(NUM_CH)]
 spi = spidev.SpiDev()
 spi.open(0,0)
 ser = serial.Serial('/dev/ttyUSB0', 57600) #baudrate of arduino motor driver 
-
+time.sleep(0.5)
+ser.write(b'xxx') #stop IR polling (from legacy driver firmware)
 
 #################################
 #routine for reading analog ports
@@ -22,6 +23,10 @@ def readADC(ch):
    val = ((r[1]&3)<<8) + r[2]	
    return val
 
+#################################
+#main program loop
+#################################
+
 while 1:
    try:
       time.sleep(0.1) #10 hz poll
@@ -29,6 +34,7 @@ while 1:
       print "DIST = ", dist_sens
 
       if (dist_sens > 300):
+          print "FWD!!"
           ser.write(b'w') #go forward
           time.sleep(0.5) #how long to move for
           ser.write(b' ') #stop 
