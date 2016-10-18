@@ -29,21 +29,19 @@ def readADC(ch):
 
 while 1:
    try:
-      time.sleep(0.05) #10 hz poll
+      time.sleep(0.02) #50 hz poll
       sound_sens = readADC(7)
-      print "SND = ", sound_sens
+      dist_sens = readADC(0)
+      print "SND = ", sound_sens, "DST = ", dist_sens
 
       if (sound_sens < 100):
           print "SOUND!!"
           ser.write(b's') # go back
           time.sleep(2)
           ser.write(b' ') # stop
-          continue 
-          for i in range (8):
-             ser.write(b'a') #turn left
-             time.sleep(0.2) 
-             ser.write(b'd') #turn right
-             time.sleep(0.2)
+      if (dist_sens > 500):     
+          ser.write(b'w') #go forward
+          time.sleep(1)
           ser.write(b' ') #stop 
 
    except KeyboardInterrupt:
